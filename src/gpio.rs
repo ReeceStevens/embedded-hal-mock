@@ -62,3 +62,14 @@ impl hal::digital::InputPin for GpioPin {
         self.state == GpioState::High
     }
 }
+
+impl hal::digital::ToggleableOutputPin for GpioPin {
+    fn toggle(&mut self) {
+        if self.state == GpioState::Low {
+            self.state = GpioState::High;
+        } else {
+            self.state = GpioState::Low;
+        }
+    }
+
+}
