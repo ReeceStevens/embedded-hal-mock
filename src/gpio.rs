@@ -28,48 +28,45 @@ impl GpioPin {
     }
 }
 
-// TODO: Support both v1 and v2 OutputPin interfaces
-// impl hal::digital::v2::OutputPin for GpioPin {
-//     type Error = ();
+#[derive(Copy,Clone,Debug,PartialEq)]
+pub struct Infallible;
 
-//     fn set_low(&mut self) -> Result<(), Self::Error> {
-//         self.state = GpioState::Low;
-//         Ok(())
-//     }
+impl hal::digital::v2::OutputPin for GpioPin {
+    type Error = Infallible;
 
-//     fn set_high(&mut self) -> Result<(), Self::Error> {
-//         self.state = GpioState::High;
-//         Ok(())
-//     }
-// }
-
-impl hal::digital::OutputPin for GpioPin {
-    fn set_low(&mut self) {
+    fn set_low(&mut self) -> Result<(), Self::Error> {
         self.state = GpioState::Low;
+        Ok(())
     }
 
-    fn set_high(&mut self) {
+    fn set_high(&mut self) -> Result<(), Self::Error> {
         self.state = GpioState::High;
+        Ok(())
     }
 }
 
-impl hal::digital::InputPin for GpioPin {
-    fn is_low(&self) -> bool {
-        self.state == GpioState::Low
+impl hal::digital::v2::InputPin for GpioPin {
+    type Error = Infallible;
+
+    fn is_low(&self) -> Result<bool, Self::Error> {
+        Ok(self.state == GpioState::Low)
     }
 
-    fn is_high(&self) -> bool {
-        self.state == GpioState::High
+    fn is_high(&self) -> Result<bool, Self::Error> {
+        Ok(self.state == GpioState::High)
     }
 }
 
-impl hal::digital::ToggleableOutputPin for GpioPin {
-    fn toggle(&mut self) {
+impl hal::digital::v2::ToggleableOutputPin for GpioPin {
+    type Error = Infallible;
+
+    fn toggle(&mut self) -> Result<(), Self::Error> {
         if self.state == GpioState::Low {
             self.state = GpioState::High;
         } else {
             self.state = GpioState::Low;
         }
+        Ok(())
     }
 
 }
